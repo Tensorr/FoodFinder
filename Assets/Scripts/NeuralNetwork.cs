@@ -59,16 +59,20 @@ public class NeuralNetwork : IComparable<NeuralNetwork>
     /// <param name="copyWeights"></param>
     private void CopyWeights(float[][][] copyWeights)
     {
-        for (int i = 0; i < weights.Length; i++)
-        {
-            for (int j = 0; j < weights[i].Length; j++)
-            {
-                for (int k = 0; k < weights[i][j].Length; k++)
-                {
-                    weights[i][j][k] = copyWeights[i][j][k];
-                }
-            }
-        }
+        //todo: try to optimize this to use Array.Copy it is 1000x faster for larger NN.
+        
+        Array.Copy(copyWeights,weights,weights.Length);
+
+        //for (int i = 0; i < weights.Length; i++)
+        //{
+        //    for (int j = 0; j < weights[i].Length; j++)
+        //    {
+        //        for (int k = 0; k < weights[i][j].Length; k++)
+        //        {
+        //            weights[i][j][k] = copyWeights[i][j][k];
+        //        }
+        //    }
+        //}
     }
 
     /// <summary>

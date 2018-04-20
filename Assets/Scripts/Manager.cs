@@ -124,7 +124,7 @@ public class Manager : MonoBehaviour {
     /// Initializes the Boomerangs' "brains" <br/>
     ///
     /// </summary>
-    void InitBoomerangNeuralNetworks()
+    private void InitBoomerangNeuralNetworks()
     {
         //population must be even
         if (PopulationSize % 2 != 0) PopulationSize++;
@@ -147,7 +147,7 @@ public class Manager : MonoBehaviour {
     /// <returns></returns>
     public static GameObject CreateEntity(string thing)
     {
-    return Instantiate(Resources.Load<GameObject>("prefabs/" + thing));
+        return Instantiate(Resources.Load<GameObject>("prefabs/" + thing));
     }
 
 
