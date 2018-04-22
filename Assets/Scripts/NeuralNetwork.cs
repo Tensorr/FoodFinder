@@ -53,6 +53,7 @@ public class NeuralNetwork : IComparable<NeuralNetwork>
         InitWeights();
         CopyWeights(copyNetwork.weights);
     }
+  
     /// <summary>
     /// Copy the network
     /// </summary>

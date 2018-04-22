@@ -5,6 +5,7 @@ using UnityEngine;
 public class HexagonAnimator : MonoBehaviour {
     bool _increasingSize = true;
     Material mat;
+
 	// Use this for initialization
 	void Start () {
         mat = GetComponent<Renderer>().material;
@@ -12,7 +13,6 @@ public class HexagonAnimator : MonoBehaviour {
     }
 	
 	// Update is called once per frame
-    
 	void Update () {
         float delta = Time.deltaTime;
         Vector3 angles = transform.eulerAngles;

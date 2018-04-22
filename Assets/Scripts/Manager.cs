@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,7 +23,7 @@ public class Manager : MonoBehaviour {
     private bool _leftMouseDown = false;
     private int _generationNumber = 0;  
     private bool _isTraning = false;
-    private GameObject EneFolder;
+    private GameObject _foodFolder, _agentFolder ;
 
     void TrainTimer()
     {
@@ -37,7 +38,8 @@ public class Manager : MonoBehaviour {
     {
         RemTimeSlider.maxValue = TrainTime;
         RemTimeSlider.value = RemTimeSlider.maxValue;
-        EneFolder = new GameObject("Foodz");
+        _foodFolder = new GameObject("Food");
+        _agentFolder = new GameObject("Boomer");
     }
 
     /// <summary>
@@ -55,21 +57,7 @@ public class Manager : MonoBehaviour {
             else
             {
                 boomerBrainz.Sort(); //sort by fit worst to best
-
-                for (int badHalf = 0; badHalf < PopulationSize / 2; badHalf++)
-                {
-                    var goodHalf = badHalf + (PopulationSize/2);
-                    //was this the other way around on purpose? yeah a fit of 1 is perfect -1 is horrible
-                    //copy the good half over the bad half and mutate it 
-                    boomerBrainz[badHalf] = new NeuralNetwork(boomerBrainz[goodHalf]); 
-                    boomerBrainz[badHalf].Mutate();
-                    //swapped. keep the good half
-                    boomerBrainz[goodHalf] = new NeuralNetwork(boomerBrainz[goodHalf]); //todo: matrix reset vs this ? why would it be better?
-                    if (_generationNumber < 5) boomerBrainz[goodHalf].Mutate(); //increase early mutations
-                    //reset all their fitnesses to 0f
-                    boomerBrainz[badHalf].Fitness=0f;
-                    boomerBrainz[goodHalf].Fitness=0f; 
-                }
+                MakeBabies();
             }
            
             _generationNumber++;
@@ -115,9 +103,11 @@ public class Manager : MonoBehaviour {
         {
             var boomer = ((GameObject)Instantiate(boomerPrefab)).GetComponent<Boomerang>();
             boomer.Init(boomerBrainz[i],FoodObj.transform);
+            boomer.transform.SetParent(_agentFolder.transform);
             boomerangList.Add(boomer);
+            
         }
-
+  
     }
 
     /// <summary>
@@ -137,6 +127,23 @@ public class Manager : MonoBehaviour {
             var boomerBrain = new NeuralNetwork(Layers); // this allows for tweaking from Unity frontend
             boomerBrain.Mutate();
             boomerBrainz.Add(boomerBrain);
+        }
+    }
+
+    private void MakeBabies()
+    {
+        for (int badHalf = 0; badHalf < PopulationSize / 2; badHalf++)
+        {
+            var goodHalf = badHalf + (PopulationSize / 2);
+            //copy the good half over the bad half and mutate it 
+            boomerBrainz[badHalf] = new NeuralNetwork(boomerBrainz[goodHalf]);
+            boomerBrainz[badHalf].Mutate();
+            //keep the good half
+            boomerBrainz[goodHalf] = new NeuralNetwork(boomerBrainz[goodHalf]); //todo: matrix reset vs this ? why would it be better?
+            if (_generationNumber < 5) boomerBrainz[goodHalf].Mutate();         //increase early mutations
+            //reset all fitnesses to 0f
+            boomerBrainz[badHalf].Fitness = 0f;
+            boomerBrainz[goodHalf].Fitness = 0f;
         }
     }
 

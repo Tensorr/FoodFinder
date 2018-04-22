@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Boomerang : MonoBehaviour {
     private bool _initialized = false;
-    private Transform hex;
+    private Transform _food;
 
     //public float Angle2Hex0 = 0f;
     //public float Angle2Hex1 = 0f;
@@ -28,7 +28,7 @@ public class Boomerang : MonoBehaviour {
     {
         if (_initialized)
         {
-            float distance = Vector2.Distance(transform.position, hex.position); //distance to the HEX
+            float distance = Vector2.Distance(transform.position, _food.position); //distance to the HEX
 
             //Distance2Hex = distance;
 
@@ -53,9 +53,14 @@ public class Boomerang : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Init the neural network
+    /// </summary>
+    /// <param name="net"></param>
+    /// <param name="hex"></param>
     public void Init(NeuralNetwork net, Transform hex)
     {
-        this.hex = hex;
+        this._food = hex;
         this.net = net;
         _initialized = true;
     }
@@ -67,7 +72,7 @@ public class Boomerang : MonoBehaviour {
     /// <returns>Degrees heading towards HEX</returns>
     private float BearingToHex()
     {
-        return BearingToPoint(hex.position);
+        return BearingToPoint(_food.position);
     }
 
     /// <summary>
